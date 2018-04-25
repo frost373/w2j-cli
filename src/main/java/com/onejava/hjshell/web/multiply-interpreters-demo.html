@@ -1,0 +1,292 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>JSON-RPC Demo for JQuery Terminal Emulator</title>
+    <meta name="author" content="Jakub Jankiewicz - jcubic&#64;onet.pl"/>
+    <meta name="Description" content="Demonstration for JQuery Terminal Emulator using call automaticly JSON-RPC service (in php) with authentication."/>
+    <link rel="sitemap" type="application/xml" title="Sitemap" href=""/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <script src="../js/jquery-1.7.1.min.js"></script>
+    <script src="../js/jquery.mousewheel-min.js"></script>
+    <script src="../js/jquery.terminal.min.js"></script>
+    <link href="../css/jquery.terminal.css" rel="stylesheet"/>
+  </head>
+  <style>
+      ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          float: left;
+          position: absolute;
+          top: 18px;
+          left: 0;
+      }
+      li {
+          cursor: pointer;
+          white-space: nowrap;
+      }
+      li:hover {
+          background: #aaa;
+          color: #000;
+      }
+      .cmd-wrapper {
+          position: relative;
+      }
+      .terminal {
+          --color: #00fe00;
+          --background: #26292c;
+      }
+
+      .terminal, .cmd, .terminal .terminal-output > div > div, .cmd .prompt {
+          font-size: calc(var(--size, 1) * 16px);
+          line-height: calc(var(--size, 1) * 18px);
+      }
+  </style>
+<body>
+
+<script>
+jQuery(document).ready(function($) {
+    var ul;
+    var empty = {
+        options: [],
+        args: []
+    };
+    var commands =
+        $.parseJSON("{\"hello\":{\"args\":[{\"name\":\"hello\",\"options\":[\"id\",\"name\"]}]}}");
+
+        /*{
+
+        'git': {
+            args: [
+                {name:'commit',ask:true,options: ['amend', 'hard', 'version', 'help']},
+                {name:'hello',options: ['doit', 'test', 'hello', 'gogo']}]
+
+        },
+        'cleer': {
+            args: [
+                {name:'mem'},
+                {name:'cpu',options: ['-u', '-x', '-c', '-b']}]
+
+        },
+        'clear': empty,
+        'get-money': empty
+    };*/
+
+    function typed(finish_typing) {
+        return function(term, message, delay, finish) {
+            anim = true;
+            var prompt = term.get_prompt();
+            var c = 0;
+            if (message.length > 0) {
+                term.set_prompt('');
+                var new_prompt = '';
+                var interval = setInterval(function() {
+                    var chr = $.terminal.substring(message, c, c+1);
+                    new_prompt += chr;
+                    term.set_prompt(new_prompt);
+                    c++;
+                    if (c == length(message)) {
+                        clearInterval(interval);
+                        // execute in next interval
+                        setTimeout(function() {
+                            // swap command with prompt
+                            finish_typing(term, message, prompt);
+                            anim = false
+                            finish && finish();
+                        }, delay);
+                    }
+                }, delay);
+            }
+        };
+    }
+    function length(string) {
+        string = $.terminal.strip(string);
+        return $('<span>' + string + '</span>').text().length;
+    }
+    var typed_prompt = typed(function(term, message, prompt) {
+        term.set_prompt(message + ' ');
+    });
+    var typed_message = typed(function(term, message, prompt) {
+        term.echo(message)
+        term.set_prompt(prompt);
+    });
+
+    var term = $('body').terminal(doit, {
+
+        login:function(user, password, callback){
+            if (user == 'admin' && password == 'admin') {
+                callback('AUTHENTICATION TOKEN2');
+            } else {
+                callback(null);
+            }
+        },
+        onInit: function(term) {
+
+            term.disable();
+            $.get('https://getman.cn/mock/hello').then(function(response) {
+                //term.error("对不起,您没有权限登陆此系统");
+                //commands = jQuery.parseJSON(response);
+                var msg = "登陆成功,欢迎使用W2J-Shell-Demo,这个Demo里,你可以为所欲为,请输入命令吧";
+                typed_message(term, msg, 20, function() {
+                    //typed_prompt(term, "请输入您的账号>", 100);
+                });
+                term.enable();
+            });
+
+
+
+
+            var wrapper = term.cmd().find('.cursor').wrap('<span/>').parent().addClass('cmd-wrapper');
+            ul = $('<ul></ul>').appendTo(wrapper);
+            ul.on('click', 'li', function() {
+                term.insert($(this).text());
+                ul.empty();
+            });
+            //typed_prompt(term, ">", 100);
+        },
+        keydown: function(e) {
+            // setTimeout because terminal is adding characters in keypress
+            // we use keydown because we need to prevent default action for tab and still execute custom code
+            setTimeout(function() {
+                ul.empty();
+                var command = term.get_command();
+                var name = command.match(/^([^\s]*)/)[0];
+                var commandx = command.substr(name.length,command.length)
+                var command2 = commandx.trim()
+                var name2 = command2.match(/^([^\s]*)/)[0];
+
+                if (name) {
+                    var word = term.before_cursor(true);
+                    var regex = new RegExp('^' + $.terminal.escape_regex(word));
+                    var list;
+                    if (name == word) {
+                        list = Object.keys(commands);
+                    } else if (command.match(/\s/)) {
+                        if (commands[name]) {
+                            if (word.match(/^-/)) {
+                                if(name2){
+                                    var myarg = [];
+                                    for (var i in  commands[name])
+                                    {
+                                        if(commands[name][i].name == name2){
+                                            myarg =  commands[name][i];
+                                            break;
+                                        }
+                                    }
+                                    list = myarg.options.map(function(option) {
+                                        return '-' + option;
+                                    }
+                                )/*[name2].options.map(function(option) {
+                                        return '--' + option.name;
+                                    });*/
+                                }
+
+
+                            } else {
+                                console.log(commandx)
+                                commandx = trimLeft(commandx)
+                                if(commandx.indexOf(" ")==-1){
+                                    list = commands[name].map(function(arg) {
+                                        return arg.name;
+                                    });
+                                }
+
+
+                            }
+                        }
+                    }
+                    if (word.length >= 0 && list) {
+                        var matched = [];
+                        for (var i=list.length; i--;) {
+                            if (regex.test(list[i])) {
+                                matched.push(list[i]);
+                            }
+                        }
+                        var insert = false;
+                        if (e.which == 9) {
+                            //console.log(1111    )
+                            if (term.complete(matched)) {
+
+                                word = term.before_cursor(true);
+                                        //console.log(word)
+
+                                regex = new RegExp('^' + $.terminal.escape_regex(word));
+
+                            }
+                        }
+                        if (matched.length) {
+                            ul.hide();
+                            for (var i=0; i<matched.length; ++i) {
+                                $('<li>' + matched[i].replace(regex, '') + '</li>').appendTo(ul);
+                            }
+                            ul.show();
+                        }
+                    }
+                }
+            }, 0);
+            if (e.which == 9) {
+                return false;
+            }
+        },
+        onBlur: function() {
+            return false;
+        },
+        greetings:
+        ' ╭≈の╭≈の╭≈の╭≈の╭≈の╭≈の╭≈の╭≈の╭≈の╭≈の╭≈の╭≈の\n'+
+        '┏┳┳┓┏┉┓　　┏┓　　　┏┉┉┓┏┓┏┓┏┉┉┓┏┓　┏┓　\n'+
+        '┋┋┋┋┣┉┋┏┓┋┋┏┉┓┋┉┉┫┋┗┛┋┋　┉┫┋┋　┋┋　\n'+
+        '┋　　┋┋┉┫┋┗┛┋┗┉┛┣┉┉┋┋┏┓┋┋　┉┫┋┗┓┋┗┓\n'+
+        '┗┉┉┛┗┉┛┗┉┉┛　　　┗┉┉┛┗┛┗┛┗┉┉┛┗┉┛┗┉┛\n'+
+        'JavaWeb Command-line Framework,Simple and easy to use\n' +
+        '         Version:Alpha-0.0.1  Designed by DB.Frost\n'+
+        ' ╰≈╯╰≈╯╰≈╯╰≈╯╰≈╯╰≈╯╰≈╯╰≈╯╰≈╯╰≈╯╰≈╯╰≈╯'
+    });
+
+    function doit(command){
+        if (command == 'help') {
+            term.pause();
+            $.get('https://getman.cn/mock/hello', {command: command}).then(function(response) {
+                console.log(response)
+                term.echo(response).resume();
+            });
+        } else if (command == '666') {
+            term.echo("老铁们，双击，666，没毛病啊！");
+            term.logout()
+        } else if (command.startsWith('script ')) {
+            term.pause();
+            var str = command.substring("script".length, command.length)
+            //console.log(str);
+            eval(str);
+            term.resume();
+
+        } else {
+            term.pause();
+            $.get('https://getman.cn/mock/w2jshell/command', {command: command}).then(function(response) {
+                console.log(response)
+                term.echo(response).resume();
+            });
+        }
+    }
+
+
+
+
+});
+function trimLeft(s){
+    if(s == null) {
+        return "";
+    }
+    var whitespace = new String(" \t\n\r");
+    var str = new String(s);
+    if (whitespace.indexOf(str.charAt(0)) != -1) {
+        var j=0, i = str.length;
+        while (j < i && whitespace.indexOf(str.charAt(j)) != -1){
+            j++;
+        }
+        str = str.substring(j, i);
+    }
+    return str;
+}
+</script>
+</body>
