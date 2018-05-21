@@ -1,0 +1,328 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <title>JSON-RPC Demo for JQuery Terminal Emulator</title>
+    <meta name="author" content="Jakub Jankiewicz - jcubic&#64;onet.pl"/>
+    <meta name="Description"
+          content="Demonstration for JQuery Terminal Emulator using call automaticly JSON-RPC service (in php) with authentication."/>
+    <link rel="sitemap" type="application/xml" title="Sitemap" href=""/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <script src="{URL_jquery}"></script>
+    <script src="{URL_terminal}"></script>
+    <link href="{URL_css}" rel="stylesheet"/>
+</head>
+<style>
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        float: left;
+        position: absolute;
+        top: 18px;
+        left: 0;
+    }
+
+    li {
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    li:hover {
+        background: #aaa;
+        color: #000;
+    }
+
+    .cmd-wrapper {
+        position: relative;
+    }
+
+    .terminal {
+        --color: #66D9EF;
+        --background: #272822;
+    }
+
+    .terminal, .cmd, .terminal .terminal-output > div > div, .cmd .prompt {
+        font-size: calc(var(--size, 1) * 16px);
+        line-height: calc(var(--size, 1) * 18px);
+    }
+</style>
+<body>
+
+<script>
+    (function(c){function g(a){var b=a||window.event,i=[].slice.call(arguments,1),e=0,h=0,f=0;a=c.event.fix(b);a.type="mousewheel";if(b.wheelDelta)e=b.wheelDelta/120;if(b.detail)e=-b.detail/3;f=e;if(b.axis!==undefined&&b.axis===b.HORIZONTAL_AXIS){f=0;h=-1*e}if(b.wheelDeltaY!==undefined)f=b.wheelDeltaY/120;if(b.wheelDeltaX!==undefined)h=-1*b.wheelDeltaX/120;i.unshift(a,e,h,f);return(c.event.dispatch||c.event.handle).apply(this,i)}var d=["DOMMouseScroll","mousewheel"];if(c.event.fixHooks)for(var j=d.length;j;)c.event.fixHooks[d[--j]]=
+        c.event.mouseHooks;c.event.special.mousewheel={setup:function(){if(this.addEventListener)for(var a=d.length;a;)this.addEventListener(d[--a],g,false);else this.onmousewheel=g},teardown:function(){if(this.removeEventListener)for(var a=d.length;a;)this.removeEventListener(d[--a],g,false);else this.onmousewheel=null}};c.fn.extend({mousewheel:function(a){return a?this.bind("mousewheel",a):this.trigger("mousewheel")},unmousewheel:function(a){return this.unbind("mousewheel",a)}})})(jQuery);
+
+
+    jQuery(document).ready(function ($) {
+        var ul;
+        var empty = {
+            options: [],
+            args: []
+        };
+        var commands =
+            {
+                'clear': empty,
+                'help':empty
+            };
+
+        function typed(finish_typing) {
+            return function (term, message, delay, finish) {
+                anim = true;
+                var prompt = term.get_prompt();
+                var c = 0;
+                if (message.length > 0) {
+                    term.set_prompt('');
+                    var new_prompt = '';
+                    var interval = setInterval(function () {
+                        var chr = $.terminal.substring(message, c, c + 1);
+                        new_prompt += chr;
+                        term.set_prompt(new_prompt);
+                        c++;
+                        if (c == length(message)) {
+                            clearInterval(interval);
+                            // execute in next interval
+                            setTimeout(function () {
+                                // swap command with prompt
+                                finish_typing(term, message, prompt);
+                                anim = false
+                                finish && finish();
+                            }, delay);
+                        }
+                    }, delay);
+                }
+            };
+        }
+
+        function length(string) {
+            string = $.terminal.strip(string);
+            return $('<span>' + string + '</span>').text().length;
+        }
+
+        var typed_prompt = typed(function (term, message, prompt) {
+            term.set_prompt(message + ' ');
+        });
+        var typed_message = typed(function (term, message, prompt) {
+            term.echo(message)
+            term.set_prompt(prompt);
+        });
+
+        var term = $('body').terminal(doit, {
+        {LOGIN_T}
+            login:function(user, password, callback){
+                $.post('{POST_URL}', {cli: 'login -login '+user+" -pass "+password}).then(function (response) {
+                     if (response.startsWith("ok")) {
+                        var content = sub20(response, response.length);
+                         callback(content);
+                    }  else if (response.startsWith("error")) {
+                         callback(null);
+                    }
+                });
+            },
+        {LOGIN_F}
+            onInit: function (term) {
+
+                term.disable();
+                var auth = term.token();
+                $.post('{POST_URL}', {cli: 'info_w2j-cli',auth:auth}).then(function (response) {
+                    if (response.startsWith("out")) {
+                        term.error("Login out").resume();
+                        term.logout();
+                        return;
+                    }
+                    commands  = Object.assign(commands, jQuery.parseJSON(response));
+                    var msg = "登陆成功,欢迎使用W2J-Shell-Demo,这个Demo里,你可以为所欲为,请输入命令吧";
+                    typed_message(term, msg, 20, function () {
+
+                    });
+                });
+
+                var wrapper = term.cmd().find('.cursor').wrap('<span/>').parent().addClass('cmd-wrapper');
+                ul = $('<ul></ul>').appendTo(wrapper);
+                ul.on('click', 'li', function () {
+                    term.insert($(this).text());
+                    ul.empty();
+                });
+            },
+            keydown: function (e) {
+                setTimeout(function () {
+                    ul.empty();
+                    var command = term.get_command();
+
+                    if (command.startsWith('help ')) {
+                        command = command.substr(5, command.length);
+                    }
+                    var name = command.match(/^([^\s]*)/)[0];
+                    var commandx = command.substr(name.length, command.length)
+                    var command2 = commandx.trim()
+                    var name2 = command2.match(/^([^\s]*)/)[0];
+
+                    if (name) {
+                        var word = term.before_cursor(true);
+                        var regex = new RegExp('^' + $.terminal.escape_regex(word));
+                        var list;
+                        if (name == word) {
+                            list = Object.keys(commands);
+                        } else if (command.match(/\s/)) {
+                            if (commands[name]) {
+                                if (word.match(/^-/)) {
+                                    if (name2) {
+                                        var myarg = [];
+                                        for (var i in  commands[name]) {
+                                            if (commands[name][i].name == name2) {
+                                                myarg = commands[name][i];
+                                                break;
+                                            }
+                                        }
+                                        list = myarg.options.map(function (option) {
+                                                return '-' + option;
+                                            }
+                                        )
+                                    }
+
+
+                                } else {
+                                    commandx = trimLeft(commandx)
+                                    if (commandx.indexOf(" ") == -1) {
+                                        list = commands[name].map(function (arg) {
+                                            return arg.name;
+                                        });
+                                    }
+
+
+                                }
+                            }
+                        }
+                        if (word.length >= 0 && list) {
+                            var matched = [];
+                            for (var i = list.length; i--;) {
+                                if (regex.test(list[i])) {
+                                    matched.push(list[i]);
+                                }
+                            }
+                            if (e.which == 9) {
+                                if (term.complete(matched)) {
+
+                                    word = term.before_cursor(true);
+                                    regex = new RegExp('^' + $.terminal.escape_regex(word));
+
+                                }
+                            }
+                            if (matched.length) {
+                                ul.hide();
+                                for (var i = 0; i < matched.length; ++i) {
+                                    $('<li>' + matched[i].replace(regex, '') + '</li>').appendTo(ul);
+                                }
+                                ul.show();
+                            }
+                        }
+                    }
+                }, 0);
+                if (e.which == 9) {
+                    return false;
+                }
+            },
+            onBlur: function () {
+                return false;
+            },
+            greetings:'{BANNER}'
+        });
+
+        function doit(command) {
+
+            if (command.trim() == '') {
+                term.echo("").resume();
+            }else
+            if (command == 'out') {
+                term.logout();
+                //term.echo("").resume();
+            } else if (command.startsWith('script ')) {
+                term.pause();
+                var str = command.substring("script".length, command.length)
+                eval(str);
+                term.resume();
+
+            } else {
+                term.pause();
+                post();
+            }
+
+
+            function post() {
+                var auth = term.token();
+                $.post('{POST_URL}', {cli: command,auth:auth}, {command: command})
+                    .then(function (response) {
+                        var content;
+                        if (response.length >= 20) {
+                            if (response.startsWith("html")) {
+                                content = sub20(response, response.length);
+                                term.echo(content, {raw: true}).resume();
+                            } else if (response.startsWith("out")) {
+                                term.error("Login out").resume();
+                                term.logout()
+                            }  else if (response.startsWith("text")) {
+                                content = sub20(response, response.length);
+                                term.echo(content).resume();
+                            } else if (response.startsWith("script")) {
+                                term.pause();
+                                eval(str);
+                                term.resume();
+                            } else if (response.startsWith("error")) {
+                                content = sub20(response, response.length);
+                                term.error(content).resume();
+                            } else if (response.startsWith("ask")) {
+                                term.resume();
+                                content = sub20(response, response.length);
+                                command = "ask " + content
+                                var history = term.history();
+                                history.disable();
+                                term.push(function (command2) {
+                                    if (command2.match(/^(y|yes)$/i)) {
+                                        term.pause();
+                                        post();
+                                        term.pop();
+                                        history.enable();
+                                    } else{
+                                        term.pop();
+                                        history.enable();
+                                    }
+                                }, {
+                                    prompt: 'Are you sure? '
+                                });
+
+                            } else {
+                                term.error("Return formatting error").resume();
+                            }
+                        } else {
+                            term.error("Return formatting error").resume();
+                        }
+                    }).error(function (xhr, errorText, errorType) {
+                    term.error(errorType + ":" + errorText).resume();
+                });
+            }
+        }
+
+
+    });
+
+    function sub20(response) {
+        return response.substr(20, response.length)
+    }
+
+    function trimLeft(s) {
+        if (s == null) {
+            return "";
+        }
+        var whitespace = new String(" \t\n\r");
+        var str = new String(s);
+        if (whitespace.indexOf(str.charAt(0)) != -1) {
+            var j = 0, i = str.length;
+            while (j < i && whitespace.indexOf(str.charAt(j)) != -1) {
+                j++;
+            }
+            str = str.substring(j, i);
+        }
+        return str;
+    }
+</script>
+</body>
