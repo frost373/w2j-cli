@@ -15,9 +15,9 @@ It can be easily combined with any Java framework , and no other dependency.Even
 
 ## Getting Started
 
-W2J-CLI can combined with any Java framework,likes spring,sptingMVC,struts2 and so on.
-There has a example for combined with base servlet:
-build web.xml
+W2J-CLI can combined with any Java framework,likes spring,sptingMVC,struts2 and so on.   
+There has a example for combined with base servlet:   
+build web.xml   
 ```
 <servlet>
     <servlet-name>DispatcherServlet</servlet-name>
@@ -42,7 +42,7 @@ build web.xml
   </servlet-mapping>
 ```
 
-build html Servlet
+build html Servlet   
 ```
 public class HtmlAction extends HttpServlet {
     HTMLConfig config;
@@ -64,7 +64,7 @@ public class HtmlAction extends HttpServlet {
     }
 }
 ```
-build the handler Servlet
+build the handler Servlet   
 ```
 public class TestAction  extends HttpServlet {
     CommandManage commandManage;
