@@ -111,7 +111,7 @@ public class YesLogin implements WJLogin<Context> {
 
 ## Authors
 
-* **Dong Bin** - *Initial work* - [w2j-cli](https://github.com/frost373/w2j-cli.git)
+* **Dong Bin** - *Initial work* - [w2j-cli](http://thinkin.top)
 
 ## License
 
