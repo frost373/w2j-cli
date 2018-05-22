@@ -187,7 +187,7 @@ public class TestAction  extends HttpServlet {
 JDK 1.6+ 
 
 ## Authors
-* **Dong Bin** - *Initial work* - [w2j-cli](http://thinkin.top)
+* **Dong Bin** - *Initial work* - [BOLG](http://thinkin.top)
 
 ## License
 
