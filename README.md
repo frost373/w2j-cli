@@ -65,7 +65,7 @@ Base input and output,Text-table, Confirm,Auto-Complete
 
 
 #### Help
-Based on annotations, W2J-CLI could automatically generate the help documents
+Based on you annotations, W2J-CLI could automatically generate the help documents
 ![image](https://raw.githubusercontent.com/wiki/frost373/w2j-cli/img/help.gif)
 
 
