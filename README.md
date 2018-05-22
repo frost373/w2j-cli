@@ -108,7 +108,7 @@ public class YesLogin implements WJLogin<Context> {
 ## Getting Started
 
 W2J-CLI can combined with any Java framework,likes spring,sptingMVC,struts2 and so on.   
-There has a example for combined with base servlet:   
+There has a example for combined with base servlet，you can get other ways in wiki 
 build web.xml   
 ```
 <servlet>
