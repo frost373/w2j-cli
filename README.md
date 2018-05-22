@@ -67,10 +67,12 @@ Based on annotations, W2J-CLI could automatically generate the help documents
 
 
 #### Login
+ W2J-CLI have provided a built-in login module
+
 ```
 public class YesLogin implements WJLogin<Context> {
 
-    public final static String AUTH = "LX2F8rdCA2wKel9yR42";
+    public final static String AUTH = "LX2F8rdCA2wKel9yR42";
 
     public  String login(String root, String pass, Context context) {
         if("root".equals(root)&&"pass".equals(pass)){
@@ -90,6 +92,7 @@ public class YesLogin implements WJLogin<Context> {
     }
 }
 ```
+![image](https://raw.githubusercontent.com/wiki/frost373/w2j-cli/img/login.gif)
 
 #### Animation
 
