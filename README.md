@@ -13,94 +13,7 @@ It can be easily combined with any Java framework , and no other dependency.Even
 
 
 
-## Getting Started
 
-W2J-CLI can combined with any Java framework,likes spring,sptingMVC,struts2 and so on.   
-There has a example for combined with base servlet:   
-build web.xml   
-```
-<servlet>
-    <servlet-name>DispatcherServlet</servlet-name>
-    <servlet-class>top.test.web.TestAction</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-
- <servlet>
-    <servlet-name>HtmlServlet</servlet-name>
-    <servlet-class>top.test.web.HtmlAction</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
- 
-  <servlet-mapping>
-    <servlet-name>DispatcherServlet</servlet-name>
-    <url-pattern>/api/*</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>HtmlServlet</servlet-name>
-    <url-pattern>/html</url-pattern>
-  </servlet-mapping>
-```
-
-build html Servlet   
-```
-public class HtmlAction extends HttpServlet {
-    HTMLConfig config;
-    public void init() throws ServletException {
-        try {
-            // the postUrl is necessary ，if you use built-in login module needLogin must be true
-            // there has some other configuration items,you can get them in wiki
-            config =  HTMLConfig.cteate().setPostUrl("http://127.0.0.1:8082/api").needLogin(true).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setCharacterEncoding("UTF-8");
-        resp.setContentType("text/html;charset=UTF-8");
-        PrintWriter writer = resp.getWriter();
-        writer.write(config.html());
-        writer.close();
-    }
-}
-```
-build the handler Servlet   
-```
-public class TestAction  extends HttpServlet {
-    CommandManage commandManage;
-    public void init(){
-        try {
-            commandManage =  CommandManage.config()
-                    .setLogin(new YesLogin()).add(new HelloTest()).add(new TaskTest());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        req.setCharacterEncoding("UTF-8");
-        Context context = new Context();//the context of your design
-        
-        String cli =  req.getParameter("cli");//get the command line
-        String auth =  req.getParameter("auth");//get the login authcode
-        String x = null;
-        try {
-            x = commandManage.handleCommand(cli,context,auth);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        resp.setContentType("text/html;charset=UTF-8");
-        PrintWriter writer = resp.getWriter();
-        writer.write(x);
-        writer.close();
-    }
-}
-```
-
-### Prerequisites
-
-JDK 1.6+ 
 
 ## Some examples
 create a class and write annotations for root command,commands,parameters
@@ -191,6 +104,95 @@ public class YesLogin implements WJLogin<Context> {
 
 
 ## Authors
+
+## Getting Started
+
+W2J-CLI can combined with any Java framework,likes spring,sptingMVC,struts2 and so on.   
+There has a example for combined with base servlet:   
+build web.xml   
+```
+<servlet>
+    <servlet-name>DispatcherServlet</servlet-name>
+    <servlet-class>top.test.web.TestAction</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+ <servlet>
+    <servlet-name>HtmlServlet</servlet-name>
+    <servlet-class>top.test.web.HtmlAction</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+ 
+  <servlet-mapping>
+    <servlet-name>DispatcherServlet</servlet-name>
+    <url-pattern>/api/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>HtmlServlet</servlet-name>
+    <url-pattern>/html</url-pattern>
+  </servlet-mapping>
+```
+
+build html Servlet   
+```
+public class HtmlAction extends HttpServlet {
+    HTMLConfig config;
+    public void init() throws ServletException {
+        try {
+            // the postUrl is necessary ，if you use built-in login module needLogin must be true
+            // there has some other configuration items,you can get them in wiki
+            config =  HTMLConfig.cteate().setPostUrl("http://127.0.0.1:8082/api").needLogin(true).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setContentType("text/html;charset=UTF-8");
+        PrintWriter writer = resp.getWriter();
+        writer.write(config.html());
+        writer.close();
+    }
+}
+```
+build the handler Servlet   
+```
+public class TestAction  extends HttpServlet {
+    CommandManage commandManage;
+    public void init(){
+        try {
+            commandManage =  CommandManage.config()
+                    .setLogin(new YesLogin()).add(new HelloTest()).add(new TaskTest());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        req.setCharacterEncoding("UTF-8");
+        Context context = new Context();//the context of your design
+        
+        String cli =  req.getParameter("cli");//get the command line
+        String auth =  req.getParameter("auth");//get the login authcode
+        String x = null;
+        try {
+            x = commandManage.handleCommand(cli,context,auth);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        resp.setContentType("text/html;charset=UTF-8");
+        PrintWriter writer = resp.getWriter();
+        writer.write(x);
+        writer.close();
+    }
+}
+```
+
+### Prerequisites
+
+JDK 1.6+ 
 
 * **Dong Bin** - *Initial work* - [w2j-cli](http://thinkin.top)
 
