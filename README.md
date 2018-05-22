@@ -97,14 +97,6 @@ public class YesLogin implements WJLogin<Context> {
 #### Script
 
 
-
-
-
-
-
-
-## Authors
-
 ## Getting Started
 
 W2J-CLI can combined with any Java framework,likes spring,sptingMVC,struts2 and so on.   
@@ -194,6 +186,7 @@ public class TestAction  extends HttpServlet {
 
 JDK 1.6+ 
 
+## Authors
 * **Dong Bin** - *Initial work* - [w2j-cli](http://thinkin.top)
 
 ## License
