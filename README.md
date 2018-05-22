@@ -8,8 +8,8 @@ It can be easily combined with any Java framework , and no other dependency.Even
 ## Why need it
 - Some functions are provided to professional and do not want to invest in developing front-end.
 - Quick development for a simple management system
--  provided some tools through a web page
-- Quick,simple,fun and so on
+- provided some tools through a web page
+- Quick,simple,fun,geek and so on
 
 
 
