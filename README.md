@@ -1,6 +1,9 @@
 # W2J-CLI
 
-JavaWeb Command-line Framework, help you easily build a command line javaWeb System.
+JavaWeb Command-line Framework, help you easily build a command line JavaWeb System.
+It can be easily combined with any Java framework , and no other dependency.Even you don't need create a HTML page.
+
+
 
 ## Why need it
 - Some functions are provided to professional and do not want to invest in developing front-end.
@@ -67,7 +70,7 @@ Based on annotations, W2J-CLI could automatically generate the help documents
 
 
 #### Login
- W2J-CLI have provided a built-in login module
+ W2J-CLI have provided a built-in login module.
 
 ```
 public class YesLogin implements WJLogin<Context> {
@@ -106,14 +109,9 @@ public class YesLogin implements WJLogin<Context> {
 
 
 
-
-
-
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+* **Dong Bin** - *Initial work* - [w2j-cli](https://github.com/frost373/w2j-cli.git)
 
 ## License
 
