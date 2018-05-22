@@ -16,13 +16,10 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
-
+JDK 1.6+ 
 
 ## Some examples
-
-#### Base
-Base input and output,Text-table, Confirm,Auto-Complete
+create a class and write annotations for root command,commands,parameters
 
 ```
 @HJRoot(name="task",help = "task related operation")
@@ -58,18 +55,20 @@ public class TaskTest {
     }
 }
 ```
+#### Base
+Base input and output,Text-table, Confirm,Auto-Complete
 
 ![image](https://raw.githubusercontent.com/wiki/frost373/w2j-cli/img/base.gif)
 
-#### Html Table and Ascii Table
-
-
 
 #### Help
+get help
 
 #### Login
+login and logout 
 
 #### Animation
+
 
 #### Script
 
