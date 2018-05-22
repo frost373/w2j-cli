@@ -32,6 +32,12 @@ public class TextTable {
         return new TextTable();
     }
 
+    public TextTable config(String name) {
+        CellConfig cellConfig = new CellConfig(null, null, name);
+        ChellConfigs.add(cellConfig);
+        return this;
+    }
+
     public TextTable config(Integer width,
                             Integer maxLineNumber,
                             String name) {
@@ -40,11 +46,11 @@ public class TextTable {
         return this;
     }
 
-    public TextTable add(List<Object> list) throws WjException {
+    public <T extends Object> TextTable add(List<T> list) throws WjException {
         if (list.size() != ChellConfigs.size()) {
             throw new WjException("Cell number is wrong!");
         }
-        rows.add(list);
+        rows.add((List<Object>) list);
         return this;
     }
 

@@ -2,10 +2,7 @@ package top.thinkin.wjcli.util;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class StrUtil {
 
@@ -56,6 +53,44 @@ public class StrUtil {
 
     public static final String EMPTY_JSON = "{}";
 
+
+    /**
+     * 以 conjunction 为分隔符将数组转换为字符串
+     *
+     * @param <T> 被处理的集合
+     * @param array 数组
+     * @param conjunction 分隔符
+     * @return 连接后的字符串
+     */
+    public static <T> String join( CharSequence conjunction,T... array) {
+        return join(array,conjunction);
+    }
+        public static <T> String join(T[] array, CharSequence conjunction) {
+        if (null == array) {
+            return null;
+        }
+
+        final StringBuilder sb = new StringBuilder();
+        boolean isFirst = true;
+        for (T item : array) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sb.append(conjunction);
+            }
+            if (ArrayUtil.isArray(item)) {
+                sb.append(join(ArrayUtil.wrap(item), conjunction));
+            } else if (item instanceof Iterable<?>) {
+                sb.append(ArrayUtil.join((Iterable<?>) item, conjunction));
+            } else if (item instanceof Iterator<?>) {
+                sb.append(ArrayUtil.join((Iterator<?>) item, conjunction));
+            } else {
+                sb.append(item);
+            }
+        }
+        return sb.toString();
+    }
+
     /**
      *
      *
@@ -75,6 +110,8 @@ public class StrUtil {
 
         return str.toString().concat(repeat(padChar, minLength - str.length()));
     }
+
+
 
     /**
      * 切割指定位置之后部分的字符串

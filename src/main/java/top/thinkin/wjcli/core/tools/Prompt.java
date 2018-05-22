@@ -1,9 +1,9 @@
 package top.thinkin.wjcli.core.tools;
 
-import com.alibaba.fastjson.JSON;
 import top.thinkin.wjcli.core.Command;
 import top.thinkin.wjcli.core.Constants;
 import top.thinkin.wjcli.core.RootCommand;
+import top.thinkin.wjcli.util.SmallJson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,9 +12,8 @@ import java.util.Map;
 
 public class Prompt {
 
-    //Map<String,List<Ary>> map= new HashMap<String,List<Ary>>();
+    Map<String,List<Ary>> map= new HashMap<String,List<Ary>>();
 
-    Map<String,Object> map= new HashMap<String,Object>();
 
     public static class Ary{
         public String name;
@@ -29,13 +28,12 @@ public class Prompt {
     }
 
     public String getJson(){
-        return JSON.toJSONString(map);
+       return SmallJson.getJson(map);
     }
 
     public  Prompt append(RootCommand rootCommand){
         String name = rootCommand.name;
         List<Ary> arys = new ArrayList<Ary>();
-        Map<String,Object> objects= new HashMap<String,Object>();
 
         List<Command> list = rootCommand.getCommands();
         for(Command command :list){
