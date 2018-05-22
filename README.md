@@ -67,7 +67,29 @@ Based on annotations, W2J-CLI could automatically generate the help documents
 
 
 #### Login
-login and logout 
+```
+public class YesLogin implements WJLogin<Context> {
+
+    public final static String AUTH = "LX2F8rdCA2wKel9yR42";
+
+    public  String login(String root, String pass, Context context) {
+        if("root".equals(root)&&"pass".equals(pass)){
+            return View.OK(AUTH);
+        }else{
+            return View.error("error");
+        }
+    }
+
+    public  boolean filter(String auth, Context context) {
+
+        if(AUTH.equals(auth)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+```
 
 #### Animation
 
