@@ -1,6 +1,6 @@
 # W2J-CLI
 
-JavaWeb Command-line Framework, help you easily build a command line JavaWeb System.
+JavaWeb Command-line Framework, help you easily build a command line JavaWeb System.  
 It can be easily combined with any Java framework , and no other dependency.Even you don't need create a HTML page.
 
 
