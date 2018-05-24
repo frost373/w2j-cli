@@ -5,9 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>top.thinkin</groupId>
-    <artifactId>w2j-cli</artifactId>
+    <artifactId>w2j-cli-parent</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <modules>
+        <module>core</module>
+    </modules>
+    <packaging>pom</packaging>
     <name>w2j-cli</name>
     <url>http://thinkin.top/</url>
 
