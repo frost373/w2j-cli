@@ -3,8 +3,6 @@
 JavaWeb Command-line Framework, help you easily build a command line JavaWeb System.  
 It can be easily combined with any Java framework , and no other dependency.Even you don't need create a HTML page.
 
-
-
 ## Why need it
 - Some functions are provided to professional and do not want to invest in developing front-end.
 - Quick development for a simple management system
@@ -81,6 +79,7 @@ Based on you annotations, W2J-CLI could automatically generate the help document
 
 ![image](https://raw.githubusercontent.com/wiki/frost373/w2j-cli/img/login.gif)
 
+This codes simulates a simple logon process   
 ```java
 public class YesLogin implements WJLogin<Context> {
 
