@@ -11,14 +11,22 @@ It can be easily combined with any Java framework , and no other dependency.Even
 - provided some tools through a web page
 - Quick,simple,fun,geek and so on
 
-
+## Get it 
+by Maven  
+```
+<dependency>
+  <groupId>top.thinkin</groupId>
+  <artifactId>w2j-cli-core</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+</dependency>
+```
 
 
 
 ## Some examples
 create a class and write annotations for root command,commands and parameters
 
-```
+```java
 @HJRoot(name="task",help = "task related operation")
 public class TaskTest {
     @HJCommand(name = "list",help = "get the list of task")
@@ -66,7 +74,7 @@ Based on you annotations, W2J-CLI could automatically generate the help document
 #### Login
  W2J-CLI have provided a built-in login module.
 
-```
+```java
 public class YesLogin implements WJLogin<Context> {
 
     public final static String AUTH = "LX2F8rdCA2wKel9yR42";
@@ -102,7 +110,7 @@ public class YesLogin implements WJLogin<Context> {
 W2J-CLI can combined with any Java framework,likes spring,sptingMVC,struts2 and so on.   
 There has a example for combined with base servlet，you can get other ways in wiki    
 build web.xml   
-```
+```xml
 <servlet>
     <servlet-name>DispatcherServlet</servlet-name>
     <servlet-class>top.test.web.TestAction</servlet-class>
@@ -127,7 +135,7 @@ build web.xml
 ```
 
 build html Servlet   
-```
+```java
 public class HtmlAction extends HttpServlet {
     HTMLConfig config;
     public void init() throws ServletException {
@@ -149,7 +157,7 @@ public class HtmlAction extends HttpServlet {
 }
 ```
 build the handler Servlet   
-```
+```java
 public class TestAction  extends HttpServlet {
     CommandManage commandManage;
     public void init(){
