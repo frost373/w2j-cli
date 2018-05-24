@@ -12,7 +12,7 @@ It can be easily combined with any Java framework , and no other dependency.Even
 - Quick,simple,fun,geek and so on
 
 ## Get it 
-by Maven  
+##### Maven  
 ```
 <dependency>
   <groupId>top.thinkin</groupId>
@@ -24,6 +24,12 @@ by Maven
 
 
 ## Some examples
+
+#### Base
+Base input and output,Text-table, Confirm,Auto-Complete
+
+![image](https://raw.githubusercontent.com/wiki/frost373/w2j-cli/img/base.gif)
+
 create a class and write annotations for root command,commands and parameters
 
 ```java
@@ -60,19 +66,20 @@ public class TaskTest {
     }
 }
 ```
-#### Base
-Base input and output,Text-table, Confirm,Auto-Complete
 
-![image](https://raw.githubusercontent.com/wiki/frost373/w2j-cli/img/base.gif)
 
 
 #### Help
 Based on you annotations, W2J-CLI could automatically generate the help documents
+
+
 ![image](https://raw.githubusercontent.com/wiki/frost373/w2j-cli/img/help.gif)
 
 
 #### Login
  W2J-CLI have provided a built-in login module.
+
+![image](https://raw.githubusercontent.com/wiki/frost373/w2j-cli/img/login.gif)
 
 ```java
 public class YesLogin implements WJLogin<Context> {
@@ -97,19 +104,20 @@ public class YesLogin implements WJLogin<Context> {
     }
 }
 ```
-![image](https://raw.githubusercontent.com/wiki/frost373/w2j-cli/img/login.gif)
-
-#### Animation
 
 
-#### Script
+
+#### Use scripts to get more powerful functions
+
+
 
 
 ## Getting Started
 
 W2J-CLI can combined with any Java framework,likes spring,sptingMVC,struts2 and so on.   
 There has a example for combined with base servlet，you can get other ways in wiki    
-build web.xml   
+
+**build web.xml**
 ```xml
 <servlet>
     <servlet-name>DispatcherServlet</servlet-name>
@@ -134,7 +142,7 @@ build web.xml
   </servlet-mapping>
 ```
 
-build html Servlet   
+**build html Servlet**   
 ```java
 public class HtmlAction extends HttpServlet {
     HTMLConfig config;
@@ -156,7 +164,7 @@ public class HtmlAction extends HttpServlet {
     }
 }
 ```
-build the handler Servlet   
+**build the handler Servlet**  
 ```java
 public class TestAction  extends HttpServlet {
     CommandManage commandManage;
