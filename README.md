@@ -11,15 +11,19 @@ It can be easily combined with any Java framework , and no other dependency.Even
 
 ## Get it 
 ##### Maven  
-```
+```xml
+<!-- https://mvnrepository.com/artifact/top.thinkin/w2j-cli-core -->
 <dependency>
-  <groupId>top.thinkin</groupId>
-  <artifactId>w2j-cli-core</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+    <groupId>top.thinkin</groupId>
+    <artifactId>w2j-cli-core</artifactId>
+    <version>0.1.1</version>
 </dependency>
 ```
-
-
+##### Gradle
+```
+// https://mvnrepository.com/artifact/top.thinkin/w2j-cli-core
+compile group: 'top.thinkin', name: 'w2j-cli-core', version: '0.1.1'
+```
 
 ## Some examples
 
