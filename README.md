@@ -16,13 +16,13 @@ It can be easily combined with any Java framework , and no other dependency.Even
 <dependency>
     <groupId>top.thinkin</groupId>
     <artifactId>w2j-cli-core</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
 </dependency>
 ```
 ##### Gradle
 ```
 // https://mvnrepository.com/artifact/top.thinkin/w2j-cli-core
-compile group: 'top.thinkin', name: 'w2j-cli-core', version: '0.1.1'
+compile group: 'top.thinkin', name: 'w2j-cli-core', version: '0.1.2'
 ```
 
 ## Some examples
