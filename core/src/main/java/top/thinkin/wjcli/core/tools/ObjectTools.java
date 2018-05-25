@@ -83,12 +83,9 @@ public class ObjectTools {
 	    return	method.invoke(obj, param);
 	}
 
-	/**
-	 *  * 执行Object的方法
+    /**
+     * 执行Object的方法
 	 * @param obj
-	 * @param methodName
-	 * @param paramTypes
-	 * @param params
 	 * @throws Exception
 	 */
 	public static void invokeObject(Object obj,String methodName,Class<?>[] paramTypes,Object[] params ) throws Exception{
