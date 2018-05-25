@@ -6,7 +6,7 @@
 
     <groupId>top.thinkin</groupId>
     <artifactId>w2j-cli-parent</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.1</version>
     <modules>
         <module>core</module>
     </modules>
@@ -22,7 +22,17 @@
             <url>http://opensource.org/licenses/MIT</url>
         </license>
     </licenses>
+    <issueManagement>
+        <system>Github Issue</system>
+        <url>https://github.com/frost373/w2j-cli/issues</url>
+    </issueManagement>
 
+    <developers>
+        <developer>
+            <name>dongbin</name>
+            <email>frost373@qq.com</email>
+        </developer>
+    </developers>
     <scm>
         <connection>scm:git:git@github.com:frost373/w2j-cli.git</connection>
         <developerConnection>scm:git:git@github.com:frost373/w2j-cli.git</developerConnection>
