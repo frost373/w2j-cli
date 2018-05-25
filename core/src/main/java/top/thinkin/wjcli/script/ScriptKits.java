@@ -5,16 +5,28 @@ import top.thinkin.wjcli.util.ScanTool;
 import top.thinkin.wjcli.util.StrUtil;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ScriptKits {
     public static final Map<String, String> SCRIPTS = new HashMap<String, String>();
+    public final static String PATH = "/script";
+    public final static List<String> BUILD_IN_SCRIPTS = Arrays.asList(
+            "loop_cli.script"
+    );
 
     public static void init() throws Exception {
-        String url = FileUtil.getAbsolutePath("", null);
-        List<File> files = ScanTool.getFiles(url, "script", true, ".script");
+        for (String script : BUILD_IN_SCRIPTS) {
+            String value = FileUtil.readResourceToString(PATH + "/" + script, ScriptKits.class);
+            String key = script.substring(0, script.lastIndexOf("."));
+            SCRIPTS.put(key, value);
+        }
+
+
+        String url = FileUtil.getClassPath();
+        List<File> files = ScanTool.getFiles(url, "/script", true, ".script");
         for (File file : files) {
             String fileName = file.getName();
             String key = fileName.substring(0, fileName.lastIndexOf("."));

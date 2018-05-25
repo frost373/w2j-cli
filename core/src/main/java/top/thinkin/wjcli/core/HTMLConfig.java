@@ -82,8 +82,7 @@ public class HTMLConfig {
             map.put("LOGIN_T", "");
             map.put("LOGIN_F", "");
         }
-        String url = FileUtil.getAbsolutePath(HTML_URL, null);
-        String temp = FileUtil.readToString(url);
+        String temp = FileUtil.readResourceToString("/" + HTML_URL, HTMLConfig.class);
         HTML = StrUtil.format(temp, map);
         return this;
     }

@@ -3,8 +3,8 @@ function doit() {
     var response = postSync("{cli}");
     if (response.indexOf("{stop_prefix}") != -1) {
         clearInterval(timer);
-        stopDisplay();
-        print(response)
+        stopScript();
+        print(response);
     } else {
         display(response);
     }

@@ -26,8 +26,6 @@ public class ScanTool {
                     }
                 }
             }
-        } else {
-            throw new Exception(rootPath + path + " does not exist");
         }
         return files;
     }

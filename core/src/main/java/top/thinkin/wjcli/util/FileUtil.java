@@ -1,7 +1,9 @@
 package top.thinkin.wjcli.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -323,6 +325,24 @@ public class FileUtil {
             }
         }
         return new String(filecontent, encoding);
+
+    }
+
+    public static String readResourceToString(String getClassPath, Class<?> baseClass) throws Exception {
+        InputStream is = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            is = baseClass.getResourceAsStream(getClassPath);
+            int i = -1;
+            while ((i = is.read()) != -1) {
+                baos.write(i);
+            }
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+        return baos.toString("UTF-8");
 
     }
 
