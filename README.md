@@ -16,7 +16,7 @@ It can be easily combined with any Java framework , and no other dependency.Even
 <dependency>
     <groupId>top.thinkin</groupId>
     <artifactId>w2j-cli-core</artifactId>
-    <version>0.1.2</version>
+    <version>0.1.3</version>
 </dependency>
 ```
 ##### Gradle
