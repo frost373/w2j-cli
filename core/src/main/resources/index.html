@@ -312,7 +312,7 @@
                                 history.disable();
                                 term.push(function (command2) {
                                     if (command2.match(/^(y|yes)$/i)) {
-                                        term.pause();
+                                        term.pause(true);
                                         post(selfcommand);
                                         term.pop();
                                         history.enable();
@@ -374,10 +374,9 @@
         }
 
         function stop(term) {
-            console.log(1)
             if (animation) {
                 clearInterval(wj_timer);
-                term.set_prompt(prompt);
+                term.set_prompt(">");
                 animation = false;
                 term.find('.cursor').show();
             }
