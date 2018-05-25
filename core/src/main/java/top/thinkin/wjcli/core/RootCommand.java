@@ -48,7 +48,7 @@ public class RootCommand {
        return commandMap.get(command);
     }
 
-    public static RootCommand init(Object obj,String name,String help){
+    public static RootCommand init(Object obj, String name, String help) {
         return new RootCommand(obj,name,help);
 
     }

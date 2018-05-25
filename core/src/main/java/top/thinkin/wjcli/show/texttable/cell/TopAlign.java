@@ -18,7 +18,7 @@ public final class TopAlign extends FunctionWithHeight
     @Override
     public Collection<String> apply(Integer height, Collection<String> cell) {
         cell = BottomTruncate.INSTANCE.apply(height, cell);
-        cell = BottomPad     .INSTANCE.apply(height, cell);
+        cell = BottomPad.INSTANCE.apply(height, cell);
         return cell;
     }
 

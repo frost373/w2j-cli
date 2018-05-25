@@ -29,9 +29,10 @@ public class Prompt {
 
     public String getJson(){
        return SmallJson.getJson(map);
+        //return JSON.toJSONString(map);
     }
 
-    public  Prompt append(RootCommand rootCommand){
+    public Prompt append(RootCommand rootCommand) {
         String name = rootCommand.name;
         List<Ary> arys = new ArrayList<Ary>();
 

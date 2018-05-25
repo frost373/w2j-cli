@@ -52,7 +52,7 @@ public abstract class FunctionWithCharAndWidthAndHeight
         };
     }
 
-    public FunctionWithCharAndWidth  withHeight(final int height) {
+    public FunctionWithCharAndWidth withHeight(final int height) {
         // curry_3(this, height)
         //
         final FunctionWithCharAndWidthAndHeight f = this;

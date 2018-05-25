@@ -1,6 +1,7 @@
 package top.thinkin.wjcli.util;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -305,7 +306,6 @@ public class FileUtil {
     }
 
 
-
     public static String readToString(String fileName) throws Exception {
         String encoding;
         byte[] filecontent;
@@ -315,10 +315,30 @@ public class FileUtil {
             File file = new File(fileName);
             Long filelength = file.length();
             filecontent = new byte[filelength.intValue()];
-             in = new FileInputStream(file);
+            in = new FileInputStream(file);
             in.read(filecontent);
         } finally {
-            if(in != null){
+            if (in != null) {
+                in.close();
+            }
+        }
+        return new String(filecontent, encoding);
+
+    }
+
+
+    public static String readToString(File file) throws Exception {
+        String encoding;
+        byte[] filecontent;
+        FileInputStream in = null;
+        try {
+            encoding = "UTF-8";
+            Long filelength = file.length();
+            filecontent = new byte[filelength.intValue()];
+            in = new FileInputStream(file);
+            in.read(filecontent);
+        } finally {
+            if (in != null) {
                 in.close();
             }
         }

@@ -60,6 +60,21 @@
             options: [],
             args: []
         };
+        var wj_timer;
+        var animation = false;
+        var prompt;
+        var isPrompt = true;
+        var waiting = {
+            "interval": 300,
+            "frames": [
+                ".  ",
+                ".. ",
+                "...",
+                " ..",
+                "  .",
+                "   "
+            ]
+        }
         var commands =
             {
                 'clear': empty,
@@ -131,7 +146,7 @@
                         return;
                     }
                     commands  = Object.assign(commands, jQuery.parseJSON(response));
-                    var msg = "登陆成功,欢迎使用W2J-Shell-Demo,这个Demo里,你可以为所欲为,请输入命令吧";
+                    var msg = "Login Success!Welcome to use W2J-Shell-Demo. Please input the command";
                     typed_message(term, msg, 20, function () {
 
                     });
@@ -232,8 +247,7 @@
 
             if (command.trim() == '') {
                 term.echo("").resume();
-            }else
-            if (command == 'out') {
+            } else if (command == 'logout') {
                 term.logout();
                 //term.echo("").resume();
             } else if (command.startsWith('script ')) {
@@ -243,15 +257,35 @@
                 term.resume();
 
             } else {
-                term.pause();
-                post();
+                post(command);
             }
 
-
-            function post() {
+            function postSync(selfcommand) {
                 var auth = term.token();
-                $.post('{POST_URL}', {cli: command,auth:auth}, {command: command})
+                var response = $.ajax({
+                    type: 'POST',
+                    url: '{POST_URL}',
+                    data: {cli: selfcommand, auth: auth},
+                    async: false
+                });
+                if (response.status == 200) {
+                    return sub20(response.responseText, response.responseText.length);
+                    ;
+
+                } else {
+                    return "error:" + response.status + " msg:" + response.statusText;
+                }
+            }
+
+            function post(selfcommand) {
+                var auth = term.token();
+                start(term, waiting);
+
+                term.pause(true);
+
+                $.post('{POST_URL}', {cli: selfcommand, auth: auth}, {command: selfcommand})
                     .then(function (response) {
+                        stop(term);
                         var content;
                         if (response.length >= 20) {
                             if (response.startsWith("html")) {
@@ -264,22 +298,22 @@
                                 content = sub20(response, response.length);
                                 term.echo(content).resume();
                             } else if (response.startsWith("script")) {
-                                term.pause();
-                                eval(str);
-                                term.resume();
+                                term.pause(true);
+                                content = sub20(response, response.length);
+                                eval(content);
                             } else if (response.startsWith("error")) {
                                 content = sub20(response, response.length);
                                 term.error(content).resume();
                             } else if (response.startsWith("ask")) {
                                 term.resume();
                                 content = sub20(response, response.length);
-                                command = "ask " + content
+                                selfcommand = "ask " + content
                                 var history = term.history();
                                 history.disable();
                                 term.push(function (command2) {
                                     if (command2.match(/^(y|yes)$/i)) {
                                         term.pause();
-                                        post();
+                                        post(selfcommand);
                                         term.pop();
                                         history.enable();
                                     } else{
@@ -297,17 +331,63 @@
                             term.error("Return formatting error").resume();
                         }
                     }).error(function (xhr, errorText, errorType) {
+                    stop(term, waiting);
                     term.error(errorType + ":" + errorText).resume();
                 });
             }
         }
 
+        function display(text) {
+            console.log(2)
 
+            term.set_prompt(text);
+        }
+
+        function stopDisplay() {
+            term.set_prompt(">");
+            term.resume();
+        }
+
+        function print(text) {
+            term.echo(text)
+        }
+
+        function error(text) {
+            term.error(text)
+        }
+
+        var i = 0;
+
+
+        function start(term, spinner) {
+            animation = true;
+            i = 0;
+
+            function set() {
+                var text = spinner.frames[i++ % spinner.frames.length];
+                term.set_prompt(text);
+            };
+            prompt = term.get_prompt();
+            term.find('.cursor').hide();
+            set();
+            wj_timer = setInterval(set, spinner.interval);
+        }
+
+        function stop(term) {
+            console.log(1)
+            if (animation) {
+                clearInterval(wj_timer);
+                term.set_prompt(prompt);
+                animation = false;
+                term.find('.cursor').show();
+            }
+        }
     });
 
     function sub20(response) {
         return response.substr(20, response.length)
     }
+
 
     function trimLeft(s) {
         if (s == null) {
@@ -324,5 +404,7 @@
         }
         return str;
     }
+
+
 </script>
 </body>

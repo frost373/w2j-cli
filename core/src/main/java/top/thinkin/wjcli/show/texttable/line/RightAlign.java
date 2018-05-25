@@ -16,7 +16,7 @@ public final class RightAlign extends FunctionWithCharAndWidth
     @Override
     public String apply(Character fill, Integer width, String line) {
         line = LeftTruncate.INSTANCE.apply(width, line);
-        line = LeftPad     .INSTANCE.apply(fill, width, line);
+        line = LeftPad.INSTANCE.apply(fill, width, line);
         return line;
     }
 

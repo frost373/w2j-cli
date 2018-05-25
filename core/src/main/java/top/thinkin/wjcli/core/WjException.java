@@ -9,7 +9,7 @@ public class WjException  extends Exception{
         super(message);
     }
 
-    public static WjException  create(String message, Object... args){
+    public static WjException create(String message, Object... args) {
         String[] strs = new String[args.length];
 
         for(int i=0;i<args.length;i++){

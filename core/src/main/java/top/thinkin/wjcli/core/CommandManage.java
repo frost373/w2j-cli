@@ -2,6 +2,7 @@ package top.thinkin.wjcli.core;
 
 import top.thinkin.wjcli.core.login.WJLogin;
 import top.thinkin.wjcli.core.tools.Prompt;
+import top.thinkin.wjcli.script.ScriptKits;
 import top.thinkin.wjcli.util.StrUtil;
 
 import java.lang.reflect.Method;
@@ -28,8 +29,14 @@ public class CommandManage{
         return needLogin;
     }
 
-    public static CommandManage config(){
-        return new CommandManage();
+    public void init() throws Exception {
+        ScriptKits.init();
+    }
+
+    public static CommandManage config() throws Exception {
+        CommandManage commandManage = new CommandManage();
+        commandManage.init();
+        return commandManage;
     }
 
     public CommandManage setLogin(WJLogin wjLogin) throws WjException {
@@ -101,7 +108,7 @@ public class CommandManage{
     }
 
     public <T> String login(String baseCommandStr,T context) throws Exception{
-        String command = StrUtil.removePrefixIgnoreCase(baseCommandStr,Constants.LOGIN_CLI);
+        String command = StrUtil.removePrefixIgnoreCase(baseCommandStr, Constants.LOGIN_CLI);
         List<String> slices =  Arrays.asList(command.split("\\s+"));
         Map<String, String> map =  getArguments(slices);
         return  wjLogin.login(map.get("login"),map.get("pass"),context);
@@ -138,7 +145,7 @@ public class CommandManage{
         }
 
         if(baseCommandStr.startsWith(Constants.ASK_CLI)){
-            baseCommandStr = StrUtil.removePrefixIgnoreCase(baseCommandStr,Constants.ASK_CLI);
+            baseCommandStr = StrUtil.removePrefixIgnoreCase(baseCommandStr, Constants.ASK_CLI);
             ask = true;
         }
 
@@ -187,7 +194,7 @@ public class CommandManage{
         return result;
     }
 
-    public <T> List<Object> getCommand(Command command1,List<String> slices,T context) throws WjException {
+    public <T> List<Object> getCommand(Command command1, List<String> slices, T context) throws WjException {
 
 
         Map<String, String> arguments = getArguments(slices);
@@ -271,7 +278,7 @@ public class CommandManage{
         return arguments;
     }
 
-    public Command getCommand(String command,List<String> pramas){
+    public Command getCommand(String command, List<String> pramas) {
         String [] arr = command.split("\\s+");
         String rootCommandStr  = null;
         String commandStr  = null;

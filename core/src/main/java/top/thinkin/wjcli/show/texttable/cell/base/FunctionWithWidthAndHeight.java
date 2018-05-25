@@ -38,7 +38,7 @@ public abstract class FunctionWithWidthAndHeight
         };
     }
 
-    public FunctionWithWidth  withHeight(final int height) {
+    public FunctionWithWidth withHeight(final int height) {
         // curry_2(this, height)
         //
         final FunctionWithWidthAndHeight f = this;

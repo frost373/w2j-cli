@@ -7,27 +7,11 @@
  */
 package top.thinkin.wjcli.show.texttable;
 
-import top.thinkin.wjcli.show.texttable.cell.BottomAlign;
-import top.thinkin.wjcli.show.texttable.cell.BottomPad;
-import top.thinkin.wjcli.show.texttable.cell.BottomTruncate;
+import top.thinkin.wjcli.show.texttable.cell.*;
 import top.thinkin.wjcli.show.texttable.cell.base.*;
-import top.thinkin.wjcli.show.texttable.cell.TopAlign;
-import top.thinkin.wjcli.show.texttable.cell.TopPad;
-import top.thinkin.wjcli.show.texttable.cell.TopTruncate;
-import top.thinkin.wjcli.show.texttable.cell.VerticalCenter;
-import top.thinkin.wjcli.show.texttable.line.HorizontalCenter;
-import top.thinkin.wjcli.show.texttable.line.LeftAlign;
-import top.thinkin.wjcli.show.texttable.line.LeftPad;
-import top.thinkin.wjcli.show.texttable.line.LeftTruncate;
-import top.thinkin.wjcli.show.texttable.line.RightAlign;
-import top.thinkin.wjcli.show.texttable.line.RightPad;
-import top.thinkin.wjcli.show.texttable.line.RightTruncate;
+import top.thinkin.wjcli.show.texttable.line.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public final class Cell
 {
@@ -265,17 +249,17 @@ public final class Cell
                     w = (null == width    ) ? w   : width;
                     h = (null == height   ) ? h   : height;
 
-                    cell = FunctionWithWidth       .from(LeftTruncate.INSTANCE).apply(Math.max(0, w - leftPad           ), cell);
-                    cell = FunctionWithWidth       .from(RightTruncate.INSTANCE).apply(Math.max(0, w - leftPad - rightPad), cell);
+                    cell = FunctionWithWidth.from(LeftTruncate.INSTANCE).apply(Math.max(0, w - leftPad), cell);
+                    cell = FunctionWithWidth.from(RightTruncate.INSTANCE).apply(Math.max(0, w - leftPad - rightPad), cell);
 
-                    cell = FunctionWithCharAndWidth.from(LeftPad      .INSTANCE).apply(c, Math.max(leftPad , w - rightPad), cell);
-                    cell = FunctionWithCharAndWidth.from(RightPad     .INSTANCE).apply(c, Math.max(rightPad, w)           , cell);
+                    cell = FunctionWithCharAndWidth.from(LeftPad.INSTANCE).apply(c, Math.max(leftPad, w - rightPad), cell);
+                    cell = FunctionWithCharAndWidth.from(RightPad.INSTANCE).apply(c, Math.max(rightPad, w), cell);
 
-                    cell = TopTruncate   .INSTANCE.apply(Math.max(0, h - topPad            ), cell);
+                    cell = TopTruncate.INSTANCE.apply(Math.max(0, h - topPad), cell);
                     cell = BottomTruncate.INSTANCE.apply(Math.max(0, h - topPad - bottomPad), cell);
 
                     cell = TopPad        .INSTANCE.apply(Math.max(topPad   , h - bottomPad), cell);
-                    cell = BottomPad     .INSTANCE.apply(Math.max(bottomPad, h)            , cell);
+                    cell = BottomPad.INSTANCE.apply(Math.max(bottomPad, h), cell);
 
                     return cell;
                 }
@@ -293,20 +277,20 @@ public final class Cell
         public static final FullPadding FULL_PADDING = FullPadding.INSTANCE;
 
         public static final Function VERTICAL_CENTER = Function.from(VerticalCenter.INSTANCE);
-        public static final Function BOTTOM_ALIGN    = Function.from(BottomAlign   .INSTANCE);
-        public static final Function BOTTOM_PAD      = Function.from(BottomPad     .INSTANCE);
-        public static final Function TOP_ALIGN       = Function.from(TopAlign      .INSTANCE);
+        public static final Function BOTTOM_ALIGN = Function.from(BottomAlign.INSTANCE);
+        public static final Function BOTTOM_PAD = Function.from(BottomPad.INSTANCE);
+        public static final Function TOP_ALIGN = Function.from(TopAlign.INSTANCE);
         public static final Function TOP_PAD         = Function.from(TopPad        .INSTANCE);
         public static final Function BOTTOM_TRUNCATE = Function.from(BottomTruncate.INSTANCE);
-        public static final Function TOP_TRUNCATE    = Function.from(TopTruncate   .INSTANCE);
+        public static final Function TOP_TRUNCATE = Function.from(TopTruncate.INSTANCE);
 
         public static final Function HORIZONTAL_CENTER = Function.from(FunctionWithCharAndWidth.from(HorizontalCenter.INSTANCE));
-        public static final Function LEFT_ALIGN        = Function.from(FunctionWithCharAndWidth.from(LeftAlign       .INSTANCE));
-        public static final Function RIGHT_ALIGN       = Function.from(FunctionWithCharAndWidth.from(RightAlign      .INSTANCE));
-        public static final Function LEFT_PAD          = Function.from(FunctionWithCharAndWidth.from(LeftPad         .INSTANCE));
-        public static final Function RIGHT_PAD         = Function.from(FunctionWithCharAndWidth.from(RightPad        .INSTANCE));
-        public static final Function LEFT_TRUNCATE     = Function.from(FunctionWithWidth       .from(LeftTruncate    .INSTANCE));
-        public static final Function RIGHT_TRUNCATE    = Function.from(FunctionWithWidth       .from(RightTruncate   .INSTANCE));
+        public static final Function LEFT_ALIGN = Function.from(FunctionWithCharAndWidth.from(LeftAlign.INSTANCE));
+        public static final Function RIGHT_ALIGN = Function.from(FunctionWithCharAndWidth.from(RightAlign.INSTANCE));
+        public static final Function LEFT_PAD = Function.from(FunctionWithCharAndWidth.from(LeftPad.INSTANCE));
+        public static final Function RIGHT_PAD = Function.from(FunctionWithCharAndWidth.from(RightPad.INSTANCE));
+        public static final Function LEFT_TRUNCATE = Function.from(FunctionWithWidth.from(LeftTruncate.INSTANCE));
+        public static final Function RIGHT_TRUNCATE = Function.from(FunctionWithWidth.from(RightTruncate.INSTANCE));
     }
 
 }

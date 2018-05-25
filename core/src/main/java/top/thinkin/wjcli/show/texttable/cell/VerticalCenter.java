@@ -23,7 +23,7 @@ public final class VerticalCenter extends FunctionWithHeight
             int over  = cell.size() - height;
             int carry = over % 2;
             int half  = (over - carry) / 2;
-            cell = TopTruncate   .INSTANCE.apply(cell.size() + half + carry, cell);
+            cell = TopTruncate.INSTANCE.apply(cell.size() + half + carry, cell);
             cell = BottomTruncate.INSTANCE.apply(cell.size() + half        , cell);
         }
         else {

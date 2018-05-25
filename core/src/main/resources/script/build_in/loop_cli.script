@@ -1,0 +1,14 @@
+var timer;
+function doit() {
+    var response = postSync("{cli}");
+    if (response.indexOf("{stop_prefix}") != -1) {
+        clearInterval(timer);
+        stopDisplay();
+        print(response)
+    } else {
+        display(response);
+    }
+}
+
+display("waiting");
+var timer = setInterval(doit, 1000);

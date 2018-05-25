@@ -27,7 +27,7 @@ public class SmallJson {
             rootArray[i] = root;
             i++;
         }
-        return StrUtil.join("","{",StrUtil.join(rootArray,","),"}");
+        return StrUtil.join("", "{", StrUtil.join(rootArray, ","), "}");
     }
 
     private static String getArgs(List<Prompt.Ary> aries){
@@ -41,7 +41,7 @@ public class SmallJson {
             for(int i =0;i<options.size();i++){
                 optionArray[i] =  StrUtil.join("","\"",options.get(i),"\"");
             }
-            root_map.put("$options",StrUtil.join(optionArray,","));
+            root_map.put("$options", StrUtil.join(optionArray, ","));
             String str = StrUtil.format(ARG_TEMP,root_map);
             ariesArray[j] = str;
             j++;
