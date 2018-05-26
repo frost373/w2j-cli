@@ -22,7 +22,7 @@ It can be easily combined with any Java framework , and no other dependency.Even
 ##### Gradle
 ```
 // https://mvnrepository.com/artifact/top.thinkin/w2j-cli-core
-compile group: 'top.thinkin', name: 'w2j-cli-core', version: '0.1.2'
+compile group: 'top.thinkin', name: 'w2j-cli-core', version: '0.1.3'
 ```
 
 ## Some examples
