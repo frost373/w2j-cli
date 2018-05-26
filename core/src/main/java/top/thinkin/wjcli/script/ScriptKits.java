@@ -34,10 +34,11 @@ public class ScriptKits {
         }
     }
 
-    public static String LOOP_CLI(String cli, String stopPrefix) {
-        Map<String, String> map = new HashMap<String, String>();
+    public static String LOOP_CLI(String cli, String stopPrefix, Long interval) {
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("cli", cli);
         map.put("stop_prefix", stopPrefix);
+        map.put("interval", interval);
         return getScript("loop_cli", map);
     }
 
