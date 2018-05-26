@@ -52,6 +52,11 @@ public class HTMLConfig {
         return this;
     }
 
+    public HTMLConfig setHtml_url(String url) {
+        this.HTML_URL = url;
+        return this;
+    }
+
 
     public HTMLConfig setM_js(String url) {
         this.URL_mousewheel = url;
@@ -91,10 +96,5 @@ public class HTMLConfig {
         return HTML;
     }
 
-    public static void main(String[] args) throws Exception {
-        String url = FileUtil.getAbsolutePath("index.html", null);
-        String temp = FileUtil.readToString(url);
-        System.out.println(temp);
-    }
 
 }
