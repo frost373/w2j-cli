@@ -34,6 +34,15 @@ public class ScriptKits {
         }
     }
 
+    /**
+     * Circular sending command.
+     * The result will be displayed on the screen and overlay the last display.
+     *
+     * @param cli
+     * @param stopPrefix If the prefix is this, the loop will stop
+     * @param interval   Time interval of a request
+     * @return
+     */
     public static String LOOP_CLI(String cli, String stopPrefix, Long interval) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("cli", cli);
