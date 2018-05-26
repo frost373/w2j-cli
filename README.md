@@ -111,7 +111,20 @@ public class YesLogin implements WJLogin<Context> {
 
 
 #### Use scripts to get more powerful functions
-
+Users can create scripts to achieve stronger functionality.
+Of course, there are some commonly used built-in scripts.Likes loop command script, you can use it to achieve some animation effects.
+```Java
+/**
+     * Circular sending command.
+     * The result will be displayed on the screen and overlay the last display.
+     * @param cli
+     * @param stopPrefix If the prefix is this, the loop will stop
+     * @param interval Time interval of a request
+     * @return
+     */
+String script = ScriptKits.LOOP_CLI("task get -id "+id,"ok",500);
+```
+![image](https://raw.githubusercontent.com/wiki/frost373/w2j-cli/img/atom.gif)
 
 
 
