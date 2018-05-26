@@ -11,4 +11,4 @@ function doit() {
 }
 
 display("waiting");
-var timer = setInterval(doit, 1000);
+var timer = setInterval(doit, {time});
