@@ -70,7 +70,7 @@ public class RootCommand {
 
             HJCommand hjCommand =  method.getAnnotation(HJCommand.class);
             Command command = new Command();
-            command.meotd = method;
+            command.method = method;
             command.command = hjCommand.name();
             command.help = hjCommand.help();
             command.ask = hjCommand.ask();

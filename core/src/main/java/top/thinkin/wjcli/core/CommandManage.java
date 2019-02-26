@@ -182,7 +182,7 @@ public class CommandManage{
 
         try {
             List<Object> values =  getCommand(command,pramas,context);
-            Method method = command.meotd;
+            Method method = command.method;
             Object[] arrays= (Object[]) values.toArray();
             result= String.valueOf(method.invoke(rootCommand.object,arrays));
         } catch (WjException e) {

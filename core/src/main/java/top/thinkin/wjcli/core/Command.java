@@ -26,7 +26,7 @@ public class Command {
     /**
      * 方法缓存
      */
-    public Method meotd;
+    public Method method;
 
     public boolean ask;
 
