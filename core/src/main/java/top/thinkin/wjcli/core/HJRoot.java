@@ -14,5 +14,6 @@ import java.lang.annotation.Target;
 public @interface HJRoot {
     public String name();
     public String help();
+    public boolean flow() default false;
     public String ext() default "";
 }

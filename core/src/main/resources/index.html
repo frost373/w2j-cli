@@ -48,6 +48,15 @@
     (function(c){function g(a){var b=a||window.event,i=[].slice.call(arguments,1),e=0,h=0,f=0;a=c.event.fix(b);a.type="mousewheel";if(b.wheelDelta)e=b.wheelDelta/120;if(b.detail)e=-b.detail/3;f=e;if(b.axis!==undefined&&b.axis===b.HORIZONTAL_AXIS){f=0;h=-1*e}if(b.wheelDeltaY!==undefined)f=b.wheelDeltaY/120;if(b.wheelDeltaX!==undefined)h=-1*b.wheelDeltaX/120;i.unshift(a,e,h,f);return(c.event.dispatch||c.event.handle).apply(this,i)}var d=["DOMMouseScroll","mousewheel"];if(c.event.fixHooks)for(var j=d.length;j;)c.event.fixHooks[d[--j]]=
         c.event.mouseHooks;c.event.special.mousewheel={setup:function(){if(this.addEventListener)for(var a=d.length;a;)this.addEventListener(d[--a],g,false);else this.onmousewheel=g},teardown:function(){if(this.removeEventListener)for(var a=d.length;a;)this.removeEventListener(d[--a],g,false);else this.onmousewheel=null}};c.fn.extend({mousewheel:function(a){return a?this.bind("mousewheel",a):this.trigger("mousewheel")},unmousewheel:function(a){return this.unbind("mousewheel",a)}})})(jQuery);
 
+    var sprit = " #!*!# ";
+
+    function newFlow(nextNode,root){
+       return {
+            nextNode:nextNode,
+            flow:true,
+            root:root
+        }
+    }
 
     jQuery(document).ready(function ($) {
         var ul;
@@ -55,6 +64,11 @@
             options: [],
             args: []
         };
+        var prompt = ">"
+        var flow = {
+            flow:false
+        };
+
         var wj_timer;
         var animation = false;
         var prompt;
@@ -277,7 +291,9 @@
                 start(term, waiting);
 
                 term.pause(true);
-
+                if(flow.flow === true){
+                    selfcommand = flow.root + " " +flow.nextNode+" -value "+selfcommand;
+                }
                 $.post('{POST_URL}', {cli: selfcommand, auth: auth}, {command: selfcommand})
                     .then(function (response) {
                         stop(term);
@@ -299,6 +315,26 @@
                             } else if (response.startsWith("error")) {
                                 content = sub20(response, response.length);
                                 term.error(content).resume();
+                            } else if (response.startsWith("flowstart")) {
+                                content = sub20(response, response.length);
+                                var flow_array=content.split(sprit);
+                                if(flow_array.length === 4){
+                                    flow = newFlow(flow_array[2],flow_array[0]);
+                                    prompt = flow_array[1]+">";
+                                    term.echo(flow_array[3]).set_prompt(prompt).resume();
+                                }else {
+                                    term.error("Return formatting error").resume();
+                                }
+                            }else if (response.startsWith("flowover")) {
+                                content = sub20(response, response.length);
+                                var flow_array=content.split(sprit);
+                                if(flow_array.length === 1){
+                                    prompt = ">";
+                                    term.echo(flow_array[0]).set_prompt(prompt).resume();
+                                }else {
+                                    term.error("Return formatting error").resume();
+                                }
+
                             } else if (response.startsWith("ask")) {
                                 term.resume();
                                 content = sub20(response, response.length);
@@ -333,8 +369,6 @@
         }
 
         function display(text) {
-            console.log(2)
-
             term.set_prompt(text);
         }
 
@@ -371,7 +405,7 @@
         function stop(term) {
             if (animation) {
                 clearInterval(wj_timer);
-                term.set_prompt(">");
+                term.set_prompt(prompt);
                 animation = false;
                 term.find('.cursor').show();
             }

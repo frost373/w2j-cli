@@ -26,7 +26,11 @@ public class Helper {
             List<Object> cells = new ArrayList<Object>();
             cells.add(rootCommand.name);
             cells.add(rootCommand.help);
-            cells.add(getCommands(rootCommand.getCommands()));
+            if(!rootCommand.flow){
+                cells.add(getCommands(rootCommand.getCommands()));
+            }else {
+                cells.add("");
+            }
             table.add(cells);
         }
 

@@ -22,10 +22,14 @@ public class RootCommand {
 
     public Object object;
 
-    protected RootCommand(Object object,String name,String help){
+    public boolean flow;
+
+
+    protected RootCommand(Object object,String name,String help,boolean flow){
         this.object =object;
         this.name = name;
         this.help = help;
+        this.flow = flow;
     }
 
     public void setCommand(Command command){
@@ -48,8 +52,8 @@ public class RootCommand {
        return commandMap.get(command);
     }
 
-    public static RootCommand init(Object obj, String name, String help) {
-        return new RootCommand(obj,name,help);
+    public static RootCommand init(Object obj,  HJRoot root) {
+        return new RootCommand(obj,root.name(),root.help(),root.flow());
 
     }
 
@@ -60,7 +64,10 @@ public class RootCommand {
             return null;
         }
         HJRoot root = clazz.getAnnotation(HJRoot.class);
-        RootCommand rootCommand =  RootCommand.init(obj,root.name(),root.help());
+
+
+        RootCommand rootCommand =  RootCommand.init(obj,root);
+
         Method[]  methods =  ObjectTools.getMethodsDirectly(obj.getClass(),false);
         for(int i=0;i<methods.length;i++){
             Method method =  methods[i];
@@ -74,6 +81,12 @@ public class RootCommand {
             command.command = hjCommand.name();
             command.help = hjCommand.help();
             command.ask = hjCommand.ask();
+            command.commonType = hjCommand.type();
+
+            if(CommonType.FLOW_START == command.commonType){
+                command.command = CommonType.FLOW_START.toString();
+            }
+
             Annotation[][] annotations = method.getParameterAnnotations();
 
             Class<?>[] parameterTypes = method.getParameterTypes();

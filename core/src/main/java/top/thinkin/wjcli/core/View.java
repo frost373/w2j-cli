@@ -38,4 +38,30 @@ public class View {
         String head =  StrUtil.padEnd("ask",20,' ');
         return head+text;
     }
+
+    public static String flowStart(Class<?> clazz,String prompt,String nextNode,String say){
+
+        if(!clazz.isAnnotationPresent(HJRoot.class)){
+            new WjException("clazz is wrong");
+        }
+        HJRoot root = clazz.getAnnotation(HJRoot.class);
+        String rootCmd = root.name();
+
+        String head =  StrUtil.padEnd("flowstart",20,' ');
+        if(StrUtil.isEmpty(prompt)){
+            prompt = "";
+        }
+        return head+StrUtil.join(" #!*!# ",rootCmd,prompt,nextNode,say);
+    }
+
+    public static String flowNext(String nextNode,String say){
+        String head =  StrUtil.padEnd("flownext",20,' ');
+
+        return head+ StrUtil.join(" #!*!# ",nextNode,say);
+    }
+
+    public static String flowOver(String say){
+        String head =  StrUtil.padEnd("flowover",20,' ');
+        return head+ StrUtil.join(" #!*!# ",say);
+    }
 }

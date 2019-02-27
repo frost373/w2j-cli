@@ -15,5 +15,6 @@ public @interface HJCommand {
     public String name();
     public String help() default "";
     public boolean ask() default false;
+    public CommonType type() default CommonType.DEF;
     public String ext() default "";
 }

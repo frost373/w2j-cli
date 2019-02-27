@@ -67,23 +67,14 @@ public class CommandManage{
 
 
     public String getHelp() throws WjException {
-
         return View.HTML(Helper.getTableHelp(map));
     }
     public String getHelp(String baseCommandStr) throws WjException {
         baseCommandStr = baseCommandStr.substring(Constants.HELP_CLI.length(),baseCommandStr.length());
         baseCommandStr = baseCommandStr.trim();
-        String [] arr = baseCommandStr.split("\\s+");
-        String rootCommandStr  = null;
-        String commandStr  = null;
-        for(int i=0;i<arr.length;i++){
-            if(i==0){
-                rootCommandStr = arr[i];
-            }
-            if(i == 1){
-                commandStr = arr[i];
-            }
-        }
+        GetCommands getCommands = new GetCommands(baseCommandStr).invoke();
+        String rootCommandStr = getCommands.getRootCommandStr();
+        String commandStr = getCommands.getCommandStr();
 
         RootCommand rootCommand = map.get(rootCommandStr);
         if(rootCommand == null){
@@ -109,12 +100,24 @@ public class CommandManage{
 
     public <T> String login(String baseCommandStr,T context) throws Exception{
         String command = StrUtil.removePrefixIgnoreCase(baseCommandStr, Constants.LOGIN_CLI);
-        List<String> slices =  Arrays.asList(command.split("\\s+"));
-        Map<String, String> map =  getArguments(slices);
+
+        GetCommands getCommands = new GetCommands(baseCommandStr).invoke();
+        String rootCommandStr = getCommands.getRootCommandStr();
+        String commandStr = getCommands.getCommandStr();
+
+
+        String valueStr = baseCommandStr.replace(rootCommandStr,"");
+        valueStr = valueStr.replace(commandStr,"");
+        List<String> pramas = Arrays.asList(valueStr.split("\\s+-"));
+        Map<String, String> map =  getArguments(pramas);
         return  wjLogin.login(map.get("login"),map.get("pass"),context);
     }
 
     public <T> String  handleCommand(String baseCommandStr,T context,String auth) throws Exception {
+
+        if(baseCommandStr == null){
+            return View.error("command cannot be null");
+        }
 
         //baseCommandStr=baseCommandStr.replaceAll("\\s+"," ");
         boolean ask = false;
@@ -149,27 +152,23 @@ public class CommandManage{
             ask = true;
         }
 
-        List<String> pramas = new ArrayList<String>();
 
-        String [] arr = baseCommandStr.split("\\s+");
-        String rootCommandStr  = null;
-        String commandStr  = null;
-        for(int i=0;i<arr.length;i++){
-            if(i==0){
-                rootCommandStr = arr[i];
-            }
-            if(i == 1){
-                commandStr = arr[i];
-            }
-            pramas.add(arr[i]);
-        }
 
+        GetCommands getCommands = new GetCommands(baseCommandStr).invoke();
+        String rootCommandStr = getCommands.getRootCommandStr();
+        String commandStr = getCommands.getCommandStr();
 
         RootCommand rootCommand = map.get(rootCommandStr);
         if(rootCommand == null){
             return View.error("root command is not exit");
         }
+
+        if(StrUtil.isEmpty(commandStr) && rootCommand.flow){
+            commandStr = CommonType.FLOW_START.toString();
+        }
+
         Command command = rootCommand.getCommand(commandStr);
+
         if(command == null){
             return View.error("command is not exit");
         }
@@ -181,6 +180,9 @@ public class CommandManage{
         String result;
 
         try {
+            String valueStr = baseCommandStr.replace(rootCommandStr,"");
+            valueStr = valueStr.replace(commandStr,"");
+            List<String> pramas = Arrays.asList(valueStr.split("\\s+-"));
             List<Object> values =  getCommand(command,pramas,context);
             Method method = command.method;
             Object[] arrays= (Object[]) values.toArray();
@@ -259,50 +261,56 @@ public class CommandManage{
     private Map<String, String> getArguments(List<String> slices) {
         Map<String,String> arguments = new HashMap<String,String>();
 
-        for(int i=0;i<slices.size();i++){
-            String key = slices.get(i);
-            if(key.startsWith("-")){
-                if(slices.size()==1){
-                    arguments.put(key,null);
-                }else{
-                    if(i<(slices.size()-1)){
-                        String nextKey = slices.get(i+1);
-                        if(!nextKey.startsWith("-")){
-                            i++;
-                            arguments.put(key.substring(1,key.length()),nextKey);
-                        }
-                    }
-                }
+        for (String slice : slices) {
+            if(StrUtil.isEmpty(slice)){
+                continue;
             }
+            slice = slice.trim();
+            int firstSpace = slice.indexOf(" ");
+            String key =  StrUtil.sub(slice,0,firstSpace);
+            String value;
+            if(firstSpace == -1){
+                value = null;
+            }else{
+                value =  StrUtil.sub(slice,firstSpace+1,slice.length()).trim();
+            }
+            arguments.put(key,value);
         }
+
         return arguments;
     }
 
-    public Command getCommand(String command, List<String> pramas) {
-        String [] arr = command.split("\\s+");
-        String rootCommandStr  = null;
-        String commandStr  = null;
-       // List<String> pramas = new ArrayList<String>();
-        for(int i=0;i<arr.length;i++){
-            if(i==0){
-                rootCommandStr = arr[i];
-            }
-            if(i == 1){
-                commandStr = arr[i];
-            }
-            pramas.add(arr[i]);
-        }
 
 
-        RootCommand rootCommand = map.get(rootCommandStr);
-        if(rootCommand != null){
-            Command command1 = rootCommand.getCommand(commandStr);
-            return  command1;
+    private class GetCommands {
+        private String baseCommandStr;
+        private String rootCommandStr;
+        private String commandStr;
+
+        public GetCommands(String baseCommandStr) {
+            this.baseCommandStr = baseCommandStr;
         }
-        return null;
+
+        public String getRootCommandStr() {
+            return rootCommandStr;
+        }
+
+        public String getCommandStr() {
+            return commandStr;
+        }
+
+        public GetCommands invoke() {
+            String [] arr = baseCommandStr.split("\\s+");
+
+            for(int i=0;i<arr.length;i++){
+                if(i==0){
+                    rootCommandStr = arr[i];
+                }
+                if(i == 1){
+                    commandStr = arr[i];
+                }
+            }
+            return this;
+        }
     }
-
-
-
-
 }

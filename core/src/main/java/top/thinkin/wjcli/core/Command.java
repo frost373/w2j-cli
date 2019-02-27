@@ -30,6 +30,9 @@ public class Command {
 
     public boolean ask;
 
+    public CommonType commonType;
+
+
     public Map<String,Value> values = new LinkedHashMap<String,Value>();
 
     public static class Value{
