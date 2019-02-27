@@ -51,10 +51,12 @@
     var sprit = " #!*!# ";
 
     function newFlow(nextNode,root){
-       return {
+        const token = Math.random().toString(36).substr(2);
+        return {
             nextNode:nextNode,
             flow:true,
-            root:root
+            root:root,
+            token:token
         }
     }
 
@@ -64,7 +66,7 @@
             options: [],
             args: []
         };
-        var prompt = ">"
+        var prompt_k = ">"
         var flow = {
             flow:false
         };
@@ -170,6 +172,9 @@
             },
             keydown: function (e) {
                 setTimeout(function () {
+                    if(flow.flow){
+                        return
+                    }
                     ul.empty();
                     var command = term.get_command();
 
@@ -193,7 +198,7 @@
                                     if (name2) {
                                         var myarg = [];
                                         for (var i in  commands[name]) {
-                                            if (commands[name][i].name == name2) {
+                                            if (commands[name][i].name === name2) {
                                                 myarg = commands[name][i];
                                                 break;
                                             }
@@ -204,16 +209,13 @@
                                         )
                                     }
 
-
                                 } else {
                                     commandx = trimLeft(commandx)
-                                    if (commandx.indexOf(" ") == -1) {
+                                    if (commandx.indexOf(" ") === -1) {
                                         list = commands[name].map(function (arg) {
                                             return arg.name;
                                         });
                                     }
-
-
                                 }
                             }
                         }
@@ -226,7 +228,6 @@
                             }
                             if (e.which == 9) {
                                 if (term.complete(matched)) {
-
                                     word = term.before_cursor(true);
                                     regex = new RegExp('^' + $.terminal.escape_regex(word));
 
@@ -292,7 +293,7 @@
 
                 term.pause(true);
                 if(flow.flow === true){
-                    selfcommand = flow.root + " " +flow.nextNode+" -value "+selfcommand;
+                    selfcommand = flow.root + " " +flow.nextNode+" -value "+selfcommand + " -token " + flow.token;
                 }
                 $.post('{POST_URL}', {cli: selfcommand, auth: auth}, {command: selfcommand})
                     .then(function (response) {
@@ -320,17 +321,28 @@
                                 var flow_array=content.split(sprit);
                                 if(flow_array.length === 4){
                                     flow = newFlow(flow_array[2],flow_array[0]);
-                                    prompt = flow_array[1]+">";
-                                    term.echo(flow_array[3]).set_prompt(prompt).resume();
+                                    prompt_k = flow_array[1]+">";
+                                    term.echo(flow_array[3]).set_prompt(prompt_k).resume();
                                 }else {
                                     term.error("Return formatting error").resume();
                                 }
-                            }else if (response.startsWith("flowover")) {
+                            }else if (response.startsWith("flownext")) {
+                                content = sub20(response, response.length);
+                                var flow_array=content.split(sprit);
+                                if(flow_array.length === 2){
+                                    flow.nextNode = flow_array[0]
+                                    term.echo(flow_array[1]).resume();
+                                }else {
+                                    term.error("Return formatting error").resume();
+                                }
+
+                            } else if (response.startsWith("flowover")) {
                                 content = sub20(response, response.length);
                                 var flow_array=content.split(sprit);
                                 if(flow_array.length === 1){
-                                    prompt = ">";
-                                    term.echo(flow_array[0]).set_prompt(prompt).resume();
+                                    prompt_k = ">";
+                                    flow = {flow:false}
+                                    term.echo(flow_array[0]).set_prompt(prompt_k).resume();
                                 }else {
                                     term.error("Return formatting error").resume();
                                 }
@@ -342,6 +354,7 @@
                                 var history = term.history();
                                 history.disable();
                                 term.push(function (command2) {
+                                    term.set_prompt(prompt_k).resume();
                                     if (command2.match(/^(y|yes)$/i)) {
                                         term.pause(true);
                                         post(selfcommand);
@@ -351,6 +364,7 @@
                                         term.pop();
                                         history.enable();
                                     }
+                                    console.log(22222222)
                                 }, {
                                     prompt: 'Are you sure? '
                                 });
@@ -405,6 +419,7 @@
         function stop(term) {
             if (animation) {
                 clearInterval(wj_timer);
+                console.log(prompt)
                 term.set_prompt(prompt);
                 animation = false;
                 term.find('.cursor').show();

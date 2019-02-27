@@ -101,13 +101,13 @@ public class CommandManage{
     public <T> String login(String baseCommandStr,T context) throws Exception{
         String command = StrUtil.removePrefixIgnoreCase(baseCommandStr, Constants.LOGIN_CLI);
 
-        GetCommands getCommands = new GetCommands(baseCommandStr).invoke();
+        GetCommands getCommands = new GetCommands(command).invoke();
         String rootCommandStr = getCommands.getRootCommandStr();
         String commandStr = getCommands.getCommandStr();
 
 
-        String valueStr = baseCommandStr.replace(rootCommandStr,"");
-        valueStr = valueStr.replace(commandStr,"");
+        String valueStr = baseCommandStr.replaceFirst(rootCommandStr,"");
+        valueStr = valueStr.replaceFirst(commandStr,"");
         List<String> pramas = Arrays.asList(valueStr.split("\\s+-"));
         Map<String, String> map =  getArguments(pramas);
         return  wjLogin.login(map.get("login"),map.get("pass"),context);
@@ -180,8 +180,8 @@ public class CommandManage{
         String result;
 
         try {
-            String valueStr = baseCommandStr.replace(rootCommandStr,"");
-            valueStr = valueStr.replace(commandStr,"");
+            String valueStr = baseCommandStr.replaceFirst(rootCommandStr,"");
+            valueStr = valueStr.replaceFirst(commandStr,"");
             List<String> pramas = Arrays.asList(valueStr.split("\\s+-"));
             List<Object> values =  getCommand(command,pramas,context);
             Method method = command.method;
